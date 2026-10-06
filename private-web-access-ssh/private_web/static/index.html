@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Private Web Access | SSH Port Forwarding</title>
+<style>
+:root{font-family:Inter,Segoe UI,Arial,sans-serif;color:#152238;background:#eef3f7}
+*{box-sizing:border-box} body{margin:0}.top{background:#0b1f33;color:white;padding:18px 8vw;border-bottom:4px solid #168c8c}
+.brand{font-weight:700;letter-spacing:.3px}.wrap{max-width:1050px;margin:44px auto;padding:0 22px}
+h1{font-size:40px;line-height:1.08;margin:0 0 12px}.lead{font-size:18px;color:#526172;max-width:760px}
+.grid{display:grid;grid-template-columns:1.4fr 1fr;gap:22px;margin-top:30px}
+.card{background:white;border:1px solid #d7e0e8;border-radius:10px;padding:24px;box-shadow:0 5px 18px #10203012}
+.badge{display:inline-block;border:1px solid #168c8c;color:#0b6969;padding:5px 9px;border-radius:5px;font-size:13px;font-weight:700}
+.flow{font-family:Consolas,monospace;background:#0b1f33;color:#e9f4f4;padding:18px;border-radius:7px;line-height:1.7;overflow:auto}
+dl{display:grid;grid-template-columns:150px 1fr;gap:10px;margin:0}dt{font-weight:700}dd{margin:0;color:#526172}
+.ok{color:#087a55;font-weight:700}.foot{margin-top:22px;color:#6b7785;font-size:14px}
+@media(max-width:760px){.grid{grid-template-columns:1fr}h1{font-size:32px}}
+</style>
+</head>
+<body>
+<div class="top"><div class="brand">NETWORK SECURITY MINI PROJECT</div></div>
+<main class="wrap">
+<span class="badge">SSH TUNNEL VERIFIED</span>
+<h1>Private Web Access Using SSH Port Forwarding</h1>
+<p class="lead">If you can read this page from the client computer, HTTP traffic has successfully travelled through an encrypted SSH local port-forward to a web service that listens only on the server's loopback interface.</p>
+<div class="grid">
+<section class="card">
+<h2>Traffic path</h2>
+<div class="flow">Browser
+  │ HTTP → localhost:8080
+  ▼
+SSH Client (-L 8080:127.0.0.1:8000)
+  │ encrypted SSH/TCP
+  ▼
+SSH Server :22
+  │ forwards inside server
+  ▼
+Private Web Service 127.0.0.1:8000</div>
+</section>
+<section class="card">
+<h2>Live server status</h2>
+<dl id="status"><dt>Status</dt><dd>Loading…</dd></dl>
+</section>
+</div>
+<div class="card" style="margin-top:22px">
+<h2>What this demonstrates</h2>
+<p>The application port is not published to other machines. SSH authenticates the client and carries the forwarded TCP stream. Local port forwarding maps a client-side port to a destination reachable from the SSH server.</p>
+</div>
+<p class="foot">Academic demonstration. Use only on systems and networks you are authorized to access.</p>
+</main>
+<script>
+fetch('/api/status').then(r=>r.json()).then(x=>{
+ document.getElementById('status').innerHTML =
+ `<dt>Status</dt><dd class="ok">${x.status}</dd>
+ <dt>Host</dt><dd>${x.server_hostname}</dd>
+ <dt>Private bind</dt><dd>${x.bound_address}:${x.private_port}</dd>
+ <dt>Server OS</dt><dd>${x.server_os}</dd>
+ <dt>Server time</dt><dd>${x.time}</dd>`;
+}).catch(()=>document.getElementById('status').innerHTML='<dt>Status</dt><dd>Unavailable</dd>');
+</script>
+</body></html>
